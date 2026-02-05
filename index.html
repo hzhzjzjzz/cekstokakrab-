@@ -1,260 +1,853 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>GFROFFICIALSTORE - Cek Stok Akrab (Preview)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Cek Area XL
+    </title>
+    <meta property="og:image" content="https://pomf2.lain.la/f/s0xfuwza.jpg" />
+    <meta property="og:title" content="Cek Area XL" />
+    <meta property="og:description" content="Cek area XL berdasarkan kota/kabupaten" />
+    <meta property="og:type" content="website" />
+    <link rel="shortcut icon" href="./logo.ico" type="image/x-icon" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-        .container { max-width: 960px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #333; margin-bottom: 40px; }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { width: 40px; height: 40px; background: linear-gradient(45deg, #00bfff, #0077b3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #fff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); }
-        .logo-text { font-size: 24px; font-weight: bold; color: #00bfff; letter-spacing: 2px; }
-        .status { display: flex; align-items: center; gap: 8px; color: #888; font-size: 14px; }
-        .status-dot { width: 8px; height: 8px; background: #25d366; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        .main-content { flex: 1; padding: 40px 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .title { font-size: 48px; font-weight: bold; color: #00bfff; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 20px rgba(0, 191, 255, 0.3); }
-        .subtitle { font-size: 18px; color: #888; margin-bottom: 40px; letter-spacing: 3px; text-transform: uppercase; }
-        .action-section { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.05); border: 1px solid #333; border-radius: 20px; padding: 40px; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); text-align: center; }
-        .action-button { background: linear-gradient(45deg, #00bfff, #0077b3); color: #fff; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
-        .action-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2); }
-        .action-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .loading { display: none; width: 20px; height: 20px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .result-section { margin-top: 40px; display: none; width: 100%; max-width: 600px; text-align: left; background: rgba(255, 255, 255, 0.05); border: 1px solid #333; border-radius: 20px; padding: 20px; }
-        .result-title { color: #00bfff; font-size: 20px; font-weight: 600; margin-bottom: 20px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        .category-header { color: #ffcc00; font-size: 16px; font-weight: bold; margin-top: 20px; margin-bottom: 10px; text-transform: uppercase; border-left: 3px solid #00bfff; padding-left: 10px; }
-        .product-list { list-style: none; }
-        .product-item { background: #222; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; transition: transform 0.2s; }
-        .product-item:hover { transform: scale(1.01); border-color: #00bfff; }
-        .product-info { display: flex; flex-direction: column; }
-        .product-name { font-weight: 600; color: #fff; font-size: 16px; }
-        .product-code { color: #888; font-size: 12px; font-family: monospace; background: #333; padding: 2px 6px; border-radius: 4px; width: fit-content; margin-top: 5px; }
-        .product-status { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: bold; padding: 5px 10px; border-radius: 5px; }
-        .status-available { color: #25d366; background: rgba(37, 211, 102, 0.1); }
-        .status-empty { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
-        .error-section { margin-top: 30px; padding: 20px; background: rgba(255, 0, 0, 0.1); border: 1px solid #ff4444; border-radius: 15px; display: none; max-width: 600px; text-align: left; }
-        .error-title { color: #ff4444; font-size: 18px; font-weight: bold; margin-bottom: 15px; }
-        .error-message { color: #ccc; word-wrap: break-word; font-size: 14px; font-family: monospace; }
-        .footer { text-align: center; padding: 40px 0 20px; border-top: 1px solid #333; margin-top: 60px; }
-        .footer-text { color: #666; font-size: 14px; margin-bottom: 15px; }
-        .whatsapp-link { display: inline-flex; align-items: center; gap: 10px; color: #25d366; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
-        .whatsapp-link:hover { color: #128c7e; }
-        .whatsapp-icon { width: 24px; height: 24px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; }
-        @media (max-width: 768px) { .title { font-size: 36px; } .subtitle { font-size: 16px; letter-spacing: 2px; } .action-section { padding: 30px 20px; } .product-item { flex-direction: column; align-items: flex-start; gap: 10px; } .product-status { width: 100%; justify-content: center; } }
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .search-container {
+        margin-bottom: 20px;
+      }
+      .highlight {
+        background-color: yellow;
+      }
+      input[type=&#34;text&#34;] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: * 10px;
+        box-sizing: border-box;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <div class="logo">
-                <div class="logo-icon">🛒</div>
-                <div class="logo-text">GFR Store</div>
-            </div>
-            <div class="status">
-                <div class="status-dot"></div>
-                <span>STORE ONLINE</span>
-            </div>
-        </header>
-
-        <main class="main-content">
-            <h1 class="title">CEK STOK PRODUK</h1>
-            <p class="subtitle">Lihat ketersediaan produk secara real-time</p>
-
-            <div class="action-section">
-                <button class="action-button" id="checkStockButton">
-                    <span id="buttonText">Cek Stok Akrab</span>
-                    <div class="loading" id="loading"></div>
-                </button>
-                <p style="margin-top:10px; color:#aaa; font-size:13px;">Preview memakai data contoh — ini tidak melakukan panggilan jaringan saat buka file.</p>
-            </div>
-
-            <div class="result-section" id="resultSection">
-                <h3 class="result-title">Daftar Stok Produk</h3>
-                <div id="productList"></div>
-            </div>
-
-            <div class="error-section" id="errorSection">
-                <div class="error-title">Gagal Mengambil Data</div>
-                <div class="error-message" id="errorMessage"></div>
-                <p style="margin-top:10px; font-size:12px; color:#888;">
-                    Tips: Jika menggunakan HP/Chrome, install ekstensi "CORS Unblock" atau coba buka di browser lain. Server memblokir akses langsung dari browser.
-                </p>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p class="footer-text">Dikelola oleh H4MB4-ALLAH❤</p>
-            <a href="https://wa.me/6289667881288" class="whatsapp-link" target="_blank">
-                <div class="whatsapp-icon">📞</div>
-                <span>HUBUNGI ADMIN</span>
-            </a>
-        </footer>
+  </head>
+  <body>
+    <div class="search-container">
+      <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Tulis nama kota/kabupaten untuk mengecek nomor area" />
     </div>
-
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>
+            Provinsi
+          </th>
+          <th>
+            Kota/Kabupaten
+          </th>
+          <th>
+            Area
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Banten
+          </td>
+          <td>
+            Kota Tangerang Selatan, Kota Tangerang, Kab. Tangerang, Kab. Pandeglang, Kab. Lebak, Kab. Serang, Kota Serang, Kota Cilegon
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            DI Yogyakarta
+          </td>
+          <td>
+            Kab. Kulon Progo, Kota Yogyakarta, Kab. Sleman, Kab. Bantul, Kab. Gunungkidul
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            DKI Jakarta
+          </td>
+          <td>
+            Kota Jakarta Pusat, Kota Jakarta Selatan, Kota Jakarta Barat, Kota Jakarta Timur, Kota Jakarta Utara
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            DKI Jakarta
+          </td>
+          <td>
+            Kab. Kepulauan Seribu
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Barat
+          </td>
+          <td>
+            Kab. Bandung, Kab. Kuningan, Kab. Purwakarta, Kota Bandung
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Barat
+          </td>
+          <td>
+            Kab. Bandung Barat, Kota Cimahi, Kab. Cirebon, Kota Cirebon, Kab. Indramayu, Kab. Subang
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Barat
+          </td>
+          <td>
+            Kab. Bogor, Kota Bogor, Kota Depok, Kota Bekasi, Kota Banjar, Kab. Ciamis, Kota Tasikmalaya, Kab. Majalengka, Kab. Sumedang, Kab. Bekasi, Kab. Tasikmalaya, Kab. Garut
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Barat
+          </td>
+          <td>
+            Kab. Cianjur, Kab. Pangandaran, Kab. Karawang, Kota Sukabumi, Kab. Sukabumi
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Tengah
+          </td>
+          <td>
+            Kab. Tegal, Kota Surakarta, Kota Tegal, Kab. Brebes, Kab. Kebumen, Kab. Pemalang, Kota Semarang
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Tengah
+          </td>
+          <td>
+            Kab. Boyolali, Kota Salatiga, Kab. Semarang, Kab. Cilacap, Kab. Grobogan, Kab. Kendal, Kab. Rembang
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Tengah
+          </td>
+          <td>
+            Kota Pekalongan, Kab. Pekalongan, Kab. Batang, Kab. Purbalingga, Kab. Kudus, Kab. Sukoharjo, Kab. Klaten, Kota Magelang, Kab. Banyumas, Kab. Banyumas, Kab. Magelang, Kab. Temanggung, Kab. Sragen, Kab. Banjarnegara, Kab.
+            Karanganyar, Kab. Wonosobo, Kab. Jepara, Kab. Demak, Kab. Purworejo, Kab. Blora, Kab. Wonogiri, Kab. Pati
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Timur
+          </td>
+          <td>
+            Kota Probolinggo, Kab. Bangkalan, Kab. Sidoarjo, Kab. Banyuwangi, Kota Surabaya, Kab. Sampang, Kab. Pamekasan, Kab. Sumenep, Kab. Pacitan
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Timur
+          </td>
+          <td>
+            Kab. Lumajang, Kab. Probolinggo
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jawa Timur
+          </td>
+          <td>
+            Kab. Jombang, Kota Blitar, Kab. Blitar, Kota Kediri, Kab. Lamongan, Kab. Kediri, Kab. Ngawi, Kab. Mojokerto, Kota Mojokerto, Kab. Magetan, Kab. Gresik, Kab. Tulungagung, Kab. Nganjuk, Kab. Pasuruan, Kota Pasuruan, Kab.
+            Bojonegoro, Kab. Madiun, Kab. Bondowoso, Kab. Tuban, Kota Madiun, Kab. Situbondo, Kab. Jember, Kota Malang, Kab. Malang, Kab. Ponorogo, Kota Batu, Kab. Trenggalek
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Bengkulu
+          </td>
+          <td>
+            Kab. Seluma
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Bengkulu
+          </td>
+          <td>
+            Kab. Bengkulu Selatan, Kab. Kaur, Kab. Lebong, Kab. Rejang Lebong, Kab. Bengkulu Tengah, Kota Bengkulu, Kab. Bengkulu Utara, Kab. Kepahiang, Kab. Muko Muko
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jambi
+          </td>
+          <td>
+            Kab. Batanghari, Kota Jambi, Kab. Tanjung Jabung Barat, Kab. Muaro Jambi, Kab. Sarolangun
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Jambi
+          </td>
+          <td>
+            Kab. Tanjung Jabung Timur, Kab. Kerinci, Kab. Bungo, Kab. Tebo, Kab. Merangin, Kota Sungai Penuh
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kepulauan Bangka Belitung
+          </td>
+          <td>
+            Kab. Bangka Selatan, Kota Pangkal Pinang, Kab. Belitung, Kab. Belitung Timur
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kepulauan Bangka Belitung
+          </td>
+          <td>
+            Kab. Bangka, Kab. Bangka Tengah, Kab. Bangka Barat
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kepulauan Riau
+          </td>
+          <td>
+            Kota Batam
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kepulauan Riau
+          </td>
+          <td>
+            Kab. Karimun, Kab. Bintan, Kota Tanjung Pinang
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kepulauan Riau
+          </td>
+          <td>
+            Kab. Lingga, Kab. Kepulauan Anambas, Kab. Natuna
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Lampung
+          </td>
+          <td>
+            Kab. Lampung Tengah, Kab. Pringsewu, Kota Metro, Kab. Pesawaran, Kab. Lampung Selatan, Kota Bandar Lampung
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Lampung
+          </td>
+          <td>
+            Kab. Lampung Barat, Kab. Lampung Timur, Kab. Tulang Bawang Barat, Kab. Way Kanan, Kab. Tulang Bawang, Kab. Tanggamus, Kab. Pesisir Barat, Kab. Lampung Utara, Kab. Mesuji
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Nanggroe Aceh Darussalam
+          </td>
+          <td>
+            Kab. Aceh Barat Daya, Kab. Aceh Besar, Kota Sabang, Kab. Gayo Lues
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Nanggroe Aceh Darussalam
+          </td>
+          <td>
+            Kab. Aceh Jaya, Kab. Aceh Selatan, Kab. Aceh Tenggara, Kab. Nagan Raya, Kota Banda Aceh
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Nanggroe Aceh Darussalam
+          </td>
+          <td>
+            Kab. Aceh Barat, Kab. Aceh Singkil, Kab. Aceh Tamiang, Kab. Aceh Tengah, Kota Subulussalam, Kab. Bener Meriah, Kab. Aceh Utara, Kota Lhokseumawe, Kab. Pidie, Kab. Aceh Timur, Kab. Simeulue, Kota Langsa, Kab. Bireuen, Kab. Pidie
+            Jaya
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Riau
+          </td>
+          <td>
+            Kota Pekanbaru
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Riau
+          </td>
+          <td>
+            Kab. Kuantan Singingi, Kab. Pelalawan, Kab. Kampar, Kab. Siak, Kota Dumai, Kab. Rokan Hilir, Kab. Indragiri Hulu, Kab. Kepulauan Meranti, Kab. Bengkalis
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Riau
+          </td>
+          <td>
+            Kab. Rokan Hulu, Kab. Indragiri Hilir
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Barat
+          </td>
+          <td>
+            Kab. Kepulauan Mentawai
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Barat
+          </td>
+          <td>
+            Kota Payakumbuh, Kota Padang Panjang, Kab. Sijunjung, Kab. Padang Pariaman, Kota Padang, Kab. Solok Selatan
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Barat
+          </td>
+          <td>
+            Kab. Pasaman Barat, Kab. Pasaman, Kab. Lima Puluh Kota, Kab. Tanah Datar, Kab. Dharmasraya, Kota Solok, Kab. Agam, Kab. Solok, Kota Bukittinggi, Kota Pariaman, Kota Sawahlunto, Kab. Pesisir Selatan
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Selatan
+          </td>
+          <td>
+            Kab. Ogan Komering Ilir, Kab. Penukal Abab Lematang Ilir, Kab. Banyuasin, Kota Palembang, Kab. Ogan Ilir
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Selatan
+          </td>
+          <td>
+            Kab. Ogan Komering Ulu Timur, Kab. Ogan Komering Ulu Selatan, Kab. Ogan Komering Ulu, Kab. Musi Rawas, Kab. Musi Rawas Utara, Kab. Empat Lawang, Kota Pagar Alam, Kota Lubuk Linggau, Kab. Musi Banyuasin, Kab. Muara Enim, Kab.
+            Lahat, Kota Prabumulih
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Utara
+          </td>
+          <td>
+            Kab. Karo, Kota Medan, Kab. Dairi
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Utara
+          </td>
+          <td>
+            Kota Binjai, Kota Tebing Tinggi, Kab. Serdang Bedagai, Kab. Langkat, Kab. Deli Serdang, Kab. Batu Bara, Kota Tanjung Balai, Kab. Asahan, Kota Gunungsitoli, Kab. Nias Barat, Kab. Nias Selatan, Kab. Nias Utara
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sumatera Utara
+          </td>
+          <td>
+            Kab. Pakpak Bharat, Kab. Mandailing Natal, Kab. Padang Lawas, Kab. Labuhanbatu Utara, Kota Padangsidimpuan, Kab. Tapanuli Selatan, Kab. Labuhanbatu Selatan, Kab. Labuhanbatu, Kab. Tapanuli Utara, Kab. Padang Lawas Utara, Kab.
+            Humbang Hasundutan, Kab. Simalungun, Kab. Toba Samosir, Kota Pematangsiantar, Kab. Tapanuli Tengah, Kab. Samosir, Kota Sibolga, Kab. Nias
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Barat
+          </td>
+          <td>
+            Kab. Sekadau, Kab. Kapuas Hulu, Kab. Sintang, Kab. Bengkayang, Kab. Melawi, Kab. Sambas, Kab. Sanggau, Kab. Kubu Raya, Kota Pontianak, Kab. Kayong Utara, Kab. Landak, Kab. Mempawah, Kota Singkawang, Kab. Ketapang
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Selatan
+          </td>
+          <td>
+            Kab. Hulu Sungai Tengah, Kab. Tapin, Kab. Hulu Sungai Utara, Kab. Tabalong, Kota Banjarmasin, Kab. Banjar, Kab. Tanah Bumbu, Kota Banjarbaru, Kab. Hulu Sungai Selatan
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Selatan
+          </td>
+          <td>
+            Kab. Balangan, Kab. Barito Kuala, Kab. Tanah Laut, Kab. Kotabaru
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Tengah
+          </td>
+          <td>
+            Kab. Kapuas, Kab. Pulang Pisau, Kota Palangkaraya
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Tengah
+          </td>
+          <td>
+            Kab. Seruyan, Kab. Kotawaringin Barat, Kab. Katingan, Kab. Kotawaringin Timur, Kab. Sukamara, Kab. Lamandau, Kab. Murung Raya, Kab. Barito Timur, Kab. Barito Utara, Kab. Barito Selatan, Kab. Gunung Mas
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Timur
+          </td>
+          <td>
+            Kab. Penajam Paser Utara, Kota Balikpapan, Kab. Paser, Kab. Kutai Kartanegara, Kota Samarinda, Kota Bontang, Kab. Berau, Kab. Kutai Timur, Kab. Kutai Barat, Kab. Mahakam Ulu
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Kalimantan Utara
+          </td>
+          <td>
+            Kab. Tana Tidung, Kab. Malinau, Kab. Bulungan, Kota Tarakan, Kab. Nunukan
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Gorontalo
+          </td>
+          <td>
+            Kab. Pahuwato, Kab. Boalemo, Kab. Gorontalo, Kota Gorontalo, Kab. Gorontalo Utara, Kab. Bone Bolango
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Barat
+          </td>
+          <td>
+            Kab. Mamuju Tengah
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Barat
+          </td>
+          <td>
+            Kab. Majene, Kab. Polewali Mandar, Kab. Mamuju Utara
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Barat
+          </td>
+          <td>
+            Kab. Mamuju, Kab. Mamasa
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Selatan
+          </td>
+          <td>
+            Kab. Barru, Kota Pare Pare, Kab. Pinrang
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Selatan
+          </td>
+          <td>
+            Kab. Sinjai, Kab. Enrekang, Kab. Sidenreng Rappang, Kab. Luwu Timur, Kab. Soppeng, Kab. Tana Toraja
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Selatan
+          </td>
+          <td>
+            Kab. Kepulauan Selayar, Kab. Takalar, Kab. Jeneponto, Kab. Bulukumba, Kab. Pangkajene Kepulauan, Kota Makassar, Kab. Gowa, Kab. Maros, Kab. Bone, Kab. Wajo, Kab. Luwu, Kab. Luwu Utara, Kota Palopo, Kab. Toraja Utara
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Tengah
+          </td>
+          <td>
+            Kab. Banggai Kepulauan, Kab. Banggai Laut, Kota Palu, Kab. Toli Toli, Kab. Tojo Una Una, Kab. Morowali, Kab. Morowali Utara
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Tengah
+          </td>
+          <td>
+            Kab. Banggai, Kab. Parigi Moutong, Kab. Donggala, Kab. Sigi, Kab. Poso, Kab. Buol
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Tenggara
+          </td>
+          <td>
+            Kab. Konawe Kepulauan, Kab. Konawe Utara, Kab. Buton Utara, Kab. Wakatobi
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Tenggara
+          </td>
+          <td>
+            Kota Bau Bau, Kab. Muna, Kab. Buton Selatan, Kab. Buton Tengah, Kab. Muna Barat
+          </td>
+          <td>
+            Area 3
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Tenggara
+          </td>
+          <td>
+            Kab. Kolaka, Kab. Kolaka Utara, Kab. Konawe, Kab. Konawe Selatan, Kota Kendari, Kab. Kolaka Timur, Kab. Buton, Kab. Bombana
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Sulawesi Utara
+          </td>
+          <td>
+            Kab. Bolaang Mongondow, Kab. Bolaang Mongondow Selatan, Kota Kotamobagu, Kab. Minahasa Selatan, Kab. Bolaang Mongondow Timur, Kab. Minahasa Tenggara, Kab. Bolaang Mongondow Utara, Kota Tomohon, Kab. Minahasa, Kota Manado, Kab.
+            Minahasa Utara, Kota Bitung, Kab. Kepulauan Sangihe, Kab. Kepulauan Talaud, Kab. Siau Tagulandang Biaro
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Bali
+          </td>
+          <td>
+            Kab. Jembrana, Kab. Buleleng
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Bali
+          </td>
+          <td>
+            Kab. Badung, Kab. Karangasem, Kab. Tabanan, Kab. Bangli, Kab. Gianyar, Kab. Klungkung, Kota Denpasar
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Nusa Tenggara Barat
+          </td>
+          <td>
+            Kab. Lombok Barat, Kab. Lombok Timur, Kota Mataram, Kab. Lombok Tengah, Kab. Lombok Utara, Kab. Sumbawa Barat, Kab. Sumbawa, Kota Bima, Kab. Dompu
+          </td>
+          <td>
+            Area 2
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Nusa Tenggara Barat
+          </td>
+          <td>
+            Kab. Bima
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Nusa Tenggara Timur
+          </td>
+          <td>
+            Kab. Alor, Kota Kupang, Kab. Kupang, Kab. Malaka, Kab. Manggarai Barat, Kab. Timor Tengah Selatan, Kab. Belu, Kab. Sikka, Kab. Timor Tengah Utara, Kab. Lembata, Kab. Manggarai Timur, Kab. Ende, Kab. Sumba Barat Daya, Kab. Rote
+            Ndao, Kab. Nagekeo, Kab. Flores Timur, Kab. Ngada, Kab. Sumba Tengah, Kab. Manggarai, Kab. Sumba Barat, Kab. Sumba Timur, Kab. Sabu Raijua
+          </td>
+          <td>
+            Area 4
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Maluku
+          </td>
+          <td>
+            Kab. Maluku Tenggara Barat, Kab. Kepulauan Aru, Kota Tual, Kab. Seram Bagian Barat, Kab. Maluku Tengah, Kab. Seram Bagian Timur, Kota Ambon, Kab. Maluku Tenggara, Kab. Maluku Barat Daya, Kab. Buru Selatan, Kab. Buru
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Maluku Utara
+          </td>
+          <td>
+            Kab. Halmahera Barat, Kab. Halmahera Utara, Kab. Kepulauan Sula, Kab. Halmahera Timur, Kab. Pulau Taliabu, Kab. Halmahera Selatan, Kota Tidore Kepulauan, Kota Ternate, Kab. Halmahera Tengah, Kab. Pulau Morotai
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Papua
+          </td>
+          <td>
+            Kab. Asmat, Kab. Jayapura, Kab. Mimika, Kab. Keerom, Kab. Biak Numfor, Kota Jayapura, Kab. Kepulauan Yapen, Kab. Boven Digoel, Kab. Merauke, Kab. Deiyai, Kab. Dogiyai, Kab. Intan Jaya, Kab. Jayawijaya, Kab. Lanny Jaya, Kab.
+            Mamberamo Raya, Kab. Mamberamo Tengah, Kab. Mappi, Kab. Nabire, Kab. Nduga, Kab. Paniai, Kab. Pegunungan Bintang, Kab. Puncak, Kab. Puncak Jaya, Kab. Sarmi, Kab. Supiori, Kab. Tolikara, Kab. Waropen, Kab. Yahukimo, Kab. Yalimo
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Papua Barat
+          </td>
+          <td>
+            Kab. Teluk Bintuni, Kab. Sorong Selatan, Kab. Sorong, Kab. Teluk Wondama, Kota Sorong, Kab. Manokwari, Kab. Fak Fak, Kab. Kaimana, Kab. Manokwari Selatan, Kab. Maybrat, Kab. Pegunungan Arfak, Kab. Raja Ampat, Kab. Tambrauw
+          </td>
+          <td>
+            Area 1
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <script>
-        const API_TARGET = 'https://panel.khfy-store.com/api_v3/cek_stock_akrab';
+      function searchTable() {
+        const input = document.getElementById(&#34;searchInput&#34;);
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById(&#34;dataTable&#34;);
+        const tr = table.getElementsByTagName(&#34;tr&#34;);
 
-        // --- SAMPLE DATA untuk preview (digunakan saat membuka file ini) ---
-        const SAMPLE_DATA = {
-            ok: true,
-            data: [
-                { nama: 'Akrab Reguler 1GB', type: 'AKRAB_REG_1', sisa_slot: '15' },
-                { nama: 'Bonus Akrab L 2GB', type: 'BONUS_L_2', sisa_slot: '0' },
-                { nama: 'SuperMini 500MB', type: 'SUPERMINI_500', sisa_slot: '8' },
-                { nama: 'Akrab Reguler 5GB', type: 'AKRAB_REG_5', sisa_slot: '3' },
-                { nama: 'Bonus Akrab XXL 10GB', type: 'BONUS_XXL_10', sisa_slot: '0' },
-                { nama: 'Mini 100MB', type: 'MINI_100', sisa_slot: '20' }
-            ]
-        };
+        for (let i = 1; i &lt; tr.length; i++) {
+          const td = tr[i].getElementsByTagName(&#34;td&#34;);
+          let found = false;
 
-        // FUNGSI FETCH DENGAN SISTEM CADANGAN (FAILOVER) - tetap ada untuk penggunaan nyata
-        async function fetchStockData() {
-            // Cara 1: Coba Langsung (Biasanya gagal di browser karena CORS)
-            try {
-                console.log("Mencoba koneksi langsung...");
-                const response = await fetch(API_TARGET);
-                if (response.ok) return await response.json();
-            } catch (e) { console.log("Direct fail, mencoba Proxy 1..."); }
-
-            // Cara 2: Proxy AllOrigins (Paling stabil untuk JSON)
-            try {
-                console.log("Mencoba Proxy AllOrigins...");
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(API_TARGET)}`;
-                const response = await fetch(proxyUrl);
-                if (response.ok) {
-                    const data = await response.json();
-                    return JSON.parse(data.contents); 
-                }
-            } catch (e) { console.log("Proxy 1 fail, mencoba Proxy 2..."); }
-
-            // Cara 3: Proxy Corsproxy.io
-            try {
-                console.log("Mencoba Proxy Corsproxy.io...");
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(API_TARGET)}`;
-                const response = await fetch(proxyUrl);
-                if (response.ok) return await response.json();
-            } catch (e) {
-                throw new Error("Semua metode koneksi gagal. Server memblokir akses browser.");
+          for (let j = 0; j &lt; td.length; j++) {
+            const cell = td[j];
+            if (cell) {
+              const txtValue = cell.textContent || cell.innerText;
+              cell.innerHTML = txtValue; // Reset cell content to plain text
+              if (txtValue.toLowerCase().indexOf(filter) &gt; -1) {
+                found = true;
+                // Highlight the matching text
+                const highlightedText = txtValue.replace(new RegExp(`(${filter})`, &#34;gi&#34;), &#39;&lt;span class=&#34;highlight&#34;&gt;$1&lt;/span&gt;&#39;);
+                cell.innerHTML = highlightedText;
+              }
             }
+          }
+
+          tr[i].style.display = found ? &#34;&#34; : &#34;none&#34;;
         }
-
-        // Fungsi rendering yang sama dengan logika Anda, diekstrak supaya bisa dipakai ulang
-        function renderProducts(result) {
-            const resultSection = document.getElementById('resultSection');
-            const productList = document.getElementById('productList');
-            productList.innerHTML = '';
-
-            // Validasi Data
-            if (!result || !(result.ok || result.status) || !result.data || result.data.length === 0) {
-                throw new Error("Format data API tidak dikenali atau kosong.");
-            }
-
-            // GROUPING
-            const groupedProducts = result.data.reduce((groups, item) => {
-                let category = '📦 Produk Lainnya';
-                const name = item.nama || "";
-
-                if (name.startsWith('Bonus Akrab L')) category = '🔹 Bonus Akrab L';
-                else if (name.startsWith('Bonus Akrab XXL')) category = '🔸 Bonus Akrab XXL';
-                else if (['SuperMini', 'Mini', 'Big', 'Jumbo', 'MegaBig'].some(p => name.startsWith(p))) category = '💥 Kuota Mini/Big/Jumbo';
-                else if (name.startsWith('Akrab')) category = '👥 Akrab Reguler';
-
-                if (!groups[category]) groups[category] = [];
-                groups[category].push(item);
-                return groups;
-            }, {});
-
-            // RENDER
-            for (const category in groupedProducts) {
-                const categoryHeader = document.createElement('div');
-                categoryHeader.className = 'category-header';
-                categoryHeader.textContent = category;
-                productList.appendChild(categoryHeader);
-
-                const ul = document.createElement('ul');
-                ul.className = 'product-list';
-
-                groupedProducts[category].forEach(product => {
-                    const isAvailable = parseInt(product.sisa_slot) > 0;
-                    const statusText = isAvailable ? `Tersedia (${product.sisa_slot} Slot)` : 'Kosong';
-                    const statusClass = isAvailable ? 'status-available' : 'status-empty';
-                    const statusIcon = isAvailable ? '🟢' : '🔴';
-
-                    const li = document.createElement('li');
-                    li.className = 'product-item';
-                    li.innerHTML = `
-                        <div class="product-info">
-                            <div class="product-name">${escapeHtml(product.nama)}</div>
-                            <div class="product-code">Kode: ${escapeHtml(product.type)}</div>
-                        </div>
-                        <div class="product-status ${statusClass}">
-                            ${statusIcon} ${statusText}
-                        </div>
-                    `;
-                    ul.appendChild(li);
-                });
-                productList.appendChild(ul);
-            }
-            resultSection.style.display = 'block';
-        }
-
-        // Basic escape to avoid injecting unexpected HTML in preview
-        function escapeHtml(str) {
-            return String(str || '').replace(/[&<>"']/g, function(m) {
-                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);
-            });
-        }
-
-        // Event listener tombol — tetap memanggil fetchStockData saat user klik
-        document.getElementById('checkStockButton').addEventListener('click', async function() {
-            const button = this;
-            const buttonText = document.getElementById('buttonText');
-            const loading = document.getElementById('loading');
-            const resultSection = document.getElementById('resultSection');
-            const errorSection = document.getElementById('errorSection');
-            const errorMessage = document.getElementById('errorMessage');
-
-            // Reset UI
-            button.disabled = true;
-            buttonText.style.display = 'none';
-            loading.style.display = 'block';
-            resultSection.style.display = 'none';
-            errorSection.style.display = 'none';
-
-            try {
-                const result = await fetchStockData();
-                renderProducts(result);
-            } catch (error) {
-                console.error('Final Error:', error);
-                errorMessage.textContent = error.message + " (Cek Console untuk detail)";
-                errorSection.style.display = 'block';
-            } finally {
-                button.disabled = false;
-                buttonText.style.display = 'inline';
-                loading.style.display = 'none';
-            }
-        });
-
-        // --- Tampilkan preview menggunakan SAMPLE_DATA saat halaman dimuat ---
-        window.addEventListener('DOMContentLoaded', () => {
-            try {
-                renderProducts(SAMPLE_DATA);
-            } catch (err) {
-                console.error('Preview render error:', err);
-            }
-        });
+      }
     </script>
-</body>
+  </body>
 </html>
