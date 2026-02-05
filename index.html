@@ -7,12 +7,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -21,265 +16,44 @@
             overflow-x: hidden;
             line-height: 1.6;
         }
-
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #333;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #00bfff, #0077b3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00bfff;
-            letter-spacing: 2px;
-        }
-
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #888;
-            font-size: 14px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #25d366;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 40px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .title {
-            font-size: 48px;
-            font-weight: bold;
-            color: #00bfff;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
-        }
-
-        .subtitle {
-            font-size: 18px;
-            color: #888;
-            margin-bottom: 40px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        .action-section {
-            width: 100%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .action-button {
-            background: linear-gradient(45deg, #00bfff, #0077b3);
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 15px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2);
-        }
-
-        .action-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #fff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .result-section {
-            margin-top: 40px;
-            display: none;
-            width: 100%;
-            max-width: 600px;
-            text-align: left;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        .result-title {
-            color: #00bfff;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .product-list {
-            list-style: none;
-        }
-
-        .product-item {
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .product-name {
-            font-weight: 600;
-            color: #fff;
-            font-size: 18px;
-        }
-
-        .product-details {
-            color: #ccc;
-            font-size: 14px;
-        }
-
-        .error-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid #ff4444;
-            border-radius: 15px;
-            display: none;
-            max-width: 600px;
-            text-align: left;
-        }
-
-        .error-title {
-            color: #ff4444;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .error-message {
-            color: #ccc;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 40px 0 20px;
-            border-top: 1px solid #333;
-            margin-top: 60px;
-        }
-
-        .footer-text {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .whatsapp-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: #25d366;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .whatsapp-link:hover {
-            color: #128c7e;
-        }
-
-        .whatsapp-icon {
-            width: 24px;
-            height: 24px;
-            background: #25d366;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .title { font-size: 36px; }
-            .subtitle { font-size: 16px; letter-spacing: 2px; }
-            .action-section { padding: 30px 20px; }
-            .features-list { flex-direction: column; gap: 30px; }
-        }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #333; margin-bottom: 40px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(45deg, #00bfff, #0077b3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #fff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); }
+        .logo-text { font-size: 24px; font-weight: bold; color: #00bfff; letter-spacing: 2px; }
+        .status { display: flex; align-items: center; gap: 8px; color: #888; font-size: 14px; }
+        .status-dot { width: 8px; height: 8px; background: #25d366; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .main-content { flex: 1; padding: 40px 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .title { font-size: 48px; font-weight: bold; color: #00bfff; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 20px rgba(0, 191, 255, 0.3); }
+        .subtitle { font-size: 18px; color: #888; margin-bottom: 40px; letter-spacing: 3px; text-transform: uppercase; }
+        .action-section { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.05); border: 1px solid #333; border-radius: 20px; padding: 40px; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); text-align: center; }
+        .action-button { background: linear-gradient(45deg, #00bfff, #0077b3); color: #fff; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+        .action-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2); }
+        .action-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading { display: none; width: 20px; height: 20px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .result-section { margin-top: 40px; display: none; width: 100%; max-width: 600px; text-align: left; background: rgba(255, 255, 255, 0.05); border: 1px solid #333; border-radius: 20px; padding: 20px; }
+        .result-title { color: #00bfff; font-size: 20px; font-weight: 600; margin-bottom: 20px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .category-header { color: #ffcc00; font-size: 16px; font-weight: bold; margin-top: 20px; margin-bottom: 10px; text-transform: uppercase; border-left: 3px solid #00bfff; padding-left: 10px; }
+        .product-list { list-style: none; }
+        .product-item { background: #222; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; transition: transform 0.2s; }
+        .product-item:hover { transform: scale(1.01); border-color: #00bfff; }
+        .product-info { display: flex; flex-direction: column; }
+        .product-name { font-weight: 600; color: #fff; font-size: 16px; }
+        .product-code { color: #888; font-size: 12px; font-family: monospace; background: #333; padding: 2px 6px; border-radius: 4px; width: fit-content; margin-top: 5px; }
+        .product-status { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: bold; padding: 5px 10px; border-radius: 5px; }
+        .status-available { color: #25d366; background: rgba(37, 211, 102, 0.1); }
+        .status-empty { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
+        .error-section { margin-top: 30px; padding: 20px; background: rgba(255, 0, 0, 0.1); border: 1px solid #ff4444; border-radius: 15px; display: none; max-width: 600px; text-align: left; }
+        .error-title { color: #ff4444; font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+        .error-message { color: #ccc; word-wrap: break-word; font-size: 14px; font-family: monospace; }
+        .footer { text-align: center; padding: 40px 0 20px; border-top: 1px solid #333; margin-top: 60px; }
+        .footer-text { color: #666; font-size: 14px; margin-bottom: 15px; }
+        .whatsapp-link { display: inline-flex; align-items: center; gap: 10px; color: #25d366; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        .whatsapp-link:hover { color: #128c7e; }
+        .whatsapp-icon { width: 24px; height: 24px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; }
+        @media (max-width: 768px) { .title { font-size: 36px; } .subtitle { font-size: 16px; letter-spacing: 2px; } .action-section { padding: 30px 20px; } .product-item { flex-direction: column; align-items: flex-start; gap: 10px; } .product-status { width: 100%; justify-content: center; } }
     </style>
 </head>
 <body>
@@ -307,18 +81,21 @@
             </div>
 
             <div class="result-section" id="resultSection">
-                <h3 class="result-title" id="resultTitle">Daftar Stok Produk</h3>
-                <ul class="product-list" id="productList"></ul>
+                <h3 class="result-title">Daftar Stok Produk</h3>
+                <div id="productList"></div>
             </div>
 
             <div class="error-section" id="errorSection">
-                <div class="error-title">Error</div>
+                <div class="error-title">Gagal Mengambil Data</div>
                 <div class="error-message" id="errorMessage"></div>
+                <p style="margin-top:10px; font-size:12px; color:#888;">
+                    Tips: Jika menggunakan HP/Chrome, install ekstensi "CORS Unblock" atau coba buka di browser lain. Server memblokir akses langsung dari browser.
+                </p>
             </div>
         </main>
 
         <footer class="footer">
-            <p class="footer-text">Dikelola oleh OLD-STUDIO</p>
+            <p class="footer-text">Dikelola oleh H4MB4-ALLAH❤</p>
             <a href="https://wa.me/6289667881288" class="whatsapp-link" target="_blank">
                 <div class="whatsapp-icon">📞</div>
                 <span>HUBUNGI ADMIN</span>
@@ -326,4 +103,126 @@
         </footer>
     </div>
 
-    <script src="
+    <script>
+        const API_TARGET = 'https://panel.khfy-store.com/api_v3/cek_stock_akrab';
+        
+        // FUNGSI FETCH DENGAN SISTEM CADANGAN (FAILOVER)
+        async function fetchStockData() {
+            // Cara 1: Coba Langsung (Biasanya gagal di browser karena CORS)
+            try {
+                console.log("Mencoba koneksi langsung...");
+                const response = await fetch(API_TARGET);
+                if (response.ok) return await response.json();
+            } catch (e) { console.log("Direct fail, mencoba Proxy 1..."); }
+
+            // Cara 2: Proxy AllOrigins (Paling stabil untuk JSON)
+            try {
+                console.log("Mencoba Proxy AllOrigins...");
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(API_TARGET)}`;
+                const response = await fetch(proxyUrl);
+                if (response.ok) {
+                    const data = await response.json();
+                    // AllOrigins membungkus hasil di dalam properti "contents"
+                    return JSON.parse(data.contents); 
+                }
+            } catch (e) { console.log("Proxy 1 fail, mencoba Proxy 2..."); }
+
+            // Cara 3: Proxy Corsproxy.io
+            try {
+                console.log("Mencoba Proxy Corsproxy.io...");
+                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(API_TARGET)}`;
+                const response = await fetch(proxyUrl);
+                if (response.ok) return await response.json();
+            } catch (e) { 
+                throw new Error("Semua metode koneksi gagal. Server memblokir akses browser."); 
+            }
+        }
+
+        document.getElementById('checkStockButton').addEventListener('click', async function() {
+            const button = this;
+            const buttonText = document.getElementById('buttonText');
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('resultSection');
+            const productList = document.getElementById('productList');
+            const errorSection = document.getElementById('errorSection');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Reset UI
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            loading.style.display = 'block';
+            resultSection.style.display = 'none';
+            errorSection.style.display = 'none';
+            productList.innerHTML = '';
+
+            try {
+                // Panggil fungsi fetch pintar kita
+                const result = await fetchStockData();
+
+                // Validasi Data
+                if (result && (result.ok || result.status) && result.data && result.data.length > 0) {
+                    
+                    // --- LOGIC GROUPING (SAMA SEPERTI JS ASLI) ---
+                    const groupedProducts = result.data.reduce((groups, item) => {
+                        let category = '📦 Produk Lainnya'; 
+                        const name = item.nama || "";
+
+                        if (name.startsWith('Bonus Akrab L')) category = '🔹 Bonus Akrab L';
+                        else if (name.startsWith('Bonus Akrab XXL')) category = '🔸 Bonus Akrab XXL';
+                        else if (['SuperMini', 'Mini', 'Big', 'Jumbo', 'MegaBig'].some(p => name.startsWith(p))) category = '💥 Kuota Mini/Big/Jumbo';
+                        else if (name.startsWith('Akrab')) category = '👥 Akrab Reguler';
+
+                        if (!groups[category]) groups[category] = [];
+                        groups[category].push(item);
+                        return groups;
+                    }, {});
+
+                    // --- RENDER KE LAYAR ---
+                    for (const category in groupedProducts) {
+                        const categoryHeader = document.createElement('div');
+                        categoryHeader.className = 'category-header';
+                        categoryHeader.textContent = category;
+                        productList.appendChild(categoryHeader);
+
+                        const ul = document.createElement('ul');
+                        ul.className = 'product-list';
+
+                        groupedProducts[category].forEach(product => {
+                            const isAvailable = parseInt(product.sisa_slot) > 0;
+                            const statusText = isAvailable ? `Tersedia (${product.sisa_slot} Slot)` : 'Kosong';
+                            const statusClass = isAvailable ? 'status-available' : 'status-empty';
+                            const statusIcon = isAvailable ? '🟢' : '🔴';
+
+                            const li = document.createElement('li');
+                            li.className = 'product-item';
+                            li.innerHTML = `
+                                <div class="product-info">
+                                    <div class="product-name">${product.nama}</div>
+                                    <div class="product-code">Kode: ${product.type}</div>
+                                </div>
+                                <div class="product-status ${statusClass}">
+                                    ${statusIcon} ${statusText}
+                                </div>
+                            `;
+                            ul.appendChild(li);
+                        });
+                        productList.appendChild(ul);
+                    }
+                    resultSection.style.display = 'block';
+                } else {
+                    throw new Error("Format data API tidak dikenali atau kosong.");
+                }
+
+            } catch (error) {
+                console.error('Final Error:', error);
+                errorMessage.textContent = error.message + " (Cek Console untuk detail)";
+                errorSection.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+                </html>
