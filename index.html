@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anhtronik - Cek Stok Akrab</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Anhtronik - Cek Stok Akrab (Preview)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', sans-serif;
@@ -78,6 +77,7 @@
                     <span id="buttonText">Cek Stok Akrab</span>
                     <div class="loading" id="loading"></div>
                 </button>
+                <p style="margin-top:10px; color:#aaa; font-size:13px;">Preview memakai data contoh — ini tidak melakukan panggilan jaringan saat buka file.</p>
             </div>
 
             <div class="result-section" id="resultSection">
@@ -105,8 +105,21 @@
 
     <script>
         const API_TARGET = 'https://panel.khfy-store.com/api_v3/cek_stock_akrab';
-        
-        // FUNGSI FETCH DENGAN SISTEM CADANGAN (FAILOVER)
+
+        // --- SAMPLE DATA untuk preview (digunakan saat membuka file ini) ---
+        const SAMPLE_DATA = {
+            ok: true,
+            data: [
+                { nama: 'Akrab Reguler 1GB', type: 'AKRAB_REG_1', sisa_slot: '15' },
+                { nama: 'Bonus Akrab L 2GB', type: 'BONUS_L_2', sisa_slot: '0' },
+                { nama: 'SuperMini 500MB', type: 'SUPERMINI_500', sisa_slot: '8' },
+                { nama: 'Akrab Reguler 5GB', type: 'AKRAB_REG_5', sisa_slot: '3' },
+                { nama: 'Bonus Akrab XXL 10GB', type: 'BONUS_XXL_10', sisa_slot: '0' },
+                { nama: 'Mini 100MB', type: 'MINI_100', sisa_slot: '20' }
+            ]
+        };
+
+        // FUNGSI FETCH DENGAN SISTEM CADANGAN (FAILOVER) - tetap ada untuk penggunaan nyata
         async function fetchStockData() {
             // Cara 1: Coba Langsung (Biasanya gagal di browser karena CORS)
             try {
@@ -122,7 +135,6 @@
                 const response = await fetch(proxyUrl);
                 if (response.ok) {
                     const data = await response.json();
-                    // AllOrigins membungkus hasil di dalam properti "contents"
                     return JSON.parse(data.contents); 
                 }
             } catch (e) { console.log("Proxy 1 fail, mencoba Proxy 2..."); }
@@ -133,17 +145,84 @@
                 const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(API_TARGET)}`;
                 const response = await fetch(proxyUrl);
                 if (response.ok) return await response.json();
-            } catch (e) { 
-                throw new Error("Semua metode koneksi gagal. Server memblokir akses browser."); 
+            } catch (e) {
+                throw new Error("Semua metode koneksi gagal. Server memblokir akses browser.");
             }
         }
 
+        // Fungsi rendering yang sama dengan logika Anda, diekstrak supaya bisa dipakai ulang
+        function renderProducts(result) {
+            const resultSection = document.getElementById('resultSection');
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+
+            // Validasi Data
+            if (!result || !(result.ok || result.status) || !result.data || result.data.length === 0) {
+                throw new Error("Format data API tidak dikenali atau kosong.");
+            }
+
+            // GROUPING
+            const groupedProducts = result.data.reduce((groups, item) => {
+                let category = '📦 Produk Lainnya';
+                const name = item.nama || "";
+
+                if (name.startsWith('Bonus Akrab L')) category = '🔹 Bonus Akrab L';
+                else if (name.startsWith('Bonus Akrab XXL')) category = '🔸 Bonus Akrab XXL';
+                else if (['SuperMini', 'Mini', 'Big', 'Jumbo', 'MegaBig'].some(p => name.startsWith(p))) category = '💥 Kuota Mini/Big/Jumbo';
+                else if (name.startsWith('Akrab')) category = '👥 Akrab Reguler';
+
+                if (!groups[category]) groups[category] = [];
+                groups[category].push(item);
+                return groups;
+            }, {});
+
+            // RENDER
+            for (const category in groupedProducts) {
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'category-header';
+                categoryHeader.textContent = category;
+                productList.appendChild(categoryHeader);
+
+                const ul = document.createElement('ul');
+                ul.className = 'product-list';
+
+                groupedProducts[category].forEach(product => {
+                    const isAvailable = parseInt(product.sisa_slot) > 0;
+                    const statusText = isAvailable ? `Tersedia (${product.sisa_slot} Slot)` : 'Kosong';
+                    const statusClass = isAvailable ? 'status-available' : 'status-empty';
+                    const statusIcon = isAvailable ? '🟢' : '🔴';
+
+                    const li = document.createElement('li');
+                    li.className = 'product-item';
+                    li.innerHTML = `
+                        <div class="product-info">
+                            <div class="product-name">${escapeHtml(product.nama)}</div>
+                            <div class="product-code">Kode: ${escapeHtml(product.type)}</div>
+                        </div>
+                        <div class="product-status ${statusClass}">
+                            ${statusIcon} ${statusText}
+                        </div>
+                    `;
+                    ul.appendChild(li);
+                });
+                productList.appendChild(ul);
+            }
+            resultSection.style.display = 'block';
+        }
+
+        // Basic escape to avoid injecting unexpected HTML in preview
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, function(m) {
+                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);
+            });
+        }
+
+        // Event listener tombol — tetap memanggil fetchStockData saat user klik
         document.getElementById('checkStockButton').addEventListener('click', async function() {
             const button = this;
             const buttonText = document.getElementById('buttonText');
             const loading = document.getElementById('loading');
             const resultSection = document.getElementById('resultSection');
-            const productList = document.getElementById('productList');
             const errorSection = document.getElementById('errorSection');
             const errorMessage = document.getElementById('errorMessage');
 
@@ -153,66 +232,10 @@
             loading.style.display = 'block';
             resultSection.style.display = 'none';
             errorSection.style.display = 'none';
-            productList.innerHTML = '';
 
             try {
-                // Panggil fungsi fetch pintar kita
                 const result = await fetchStockData();
-
-                // Validasi Data
-                if (result && (result.ok || result.status) && result.data && result.data.length > 0) {
-                    
-                    // --- LOGIC GROUPING (SAMA SEPERTI JS ASLI) ---
-                    const groupedProducts = result.data.reduce((groups, item) => {
-                        let category = '📦 Produk Lainnya'; 
-                        const name = item.nama || "";
-
-                        if (name.startsWith('Bonus Akrab L')) category = '🔹 Bonus Akrab L';
-                        else if (name.startsWith('Bonus Akrab XXL')) category = '🔸 Bonus Akrab XXL';
-                        else if (['SuperMini', 'Mini', 'Big', 'Jumbo', 'MegaBig'].some(p => name.startsWith(p))) category = '💥 Kuota Mini/Big/Jumbo';
-                        else if (name.startsWith('Akrab')) category = '👥 Akrab Reguler';
-
-                        if (!groups[category]) groups[category] = [];
-                        groups[category].push(item);
-                        return groups;
-                    }, {});
-
-                    // --- RENDER KE LAYAR ---
-                    for (const category in groupedProducts) {
-                        const categoryHeader = document.createElement('div');
-                        categoryHeader.className = 'category-header';
-                        categoryHeader.textContent = category;
-                        productList.appendChild(categoryHeader);
-
-                        const ul = document.createElement('ul');
-                        ul.className = 'product-list';
-
-                        groupedProducts[category].forEach(product => {
-                            const isAvailable = parseInt(product.sisa_slot) > 0;
-                            const statusText = isAvailable ? `Tersedia (${product.sisa_slot} Slot)` : 'Kosong';
-                            const statusClass = isAvailable ? 'status-available' : 'status-empty';
-                            const statusIcon = isAvailable ? '🟢' : '🔴';
-
-                            const li = document.createElement('li');
-                            li.className = 'product-item';
-                            li.innerHTML = `
-                                <div class="product-info">
-                                    <div class="product-name">${product.nama}</div>
-                                    <div class="product-code">Kode: ${product.type}</div>
-                                </div>
-                                <div class="product-status ${statusClass}">
-                                    ${statusIcon} ${statusText}
-                                </div>
-                            `;
-                            ul.appendChild(li);
-                        });
-                        productList.appendChild(ul);
-                    }
-                    resultSection.style.display = 'block';
-                } else {
-                    throw new Error("Format data API tidak dikenali atau kosong.");
-                }
-
+                renderProducts(result);
             } catch (error) {
                 console.error('Final Error:', error);
                 errorMessage.textContent = error.message + " (Cek Console untuk detail)";
@@ -223,6 +246,15 @@
                 loading.style.display = 'none';
             }
         });
+
+        // --- Tampilkan preview menggunakan SAMPLE_DATA saat halaman dimuat ---
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                renderProducts(SAMPLE_DATA);
+            } catch (err) {
+                console.error('Preview render error:', err);
+            }
+        });
     </script>
 </body>
-                </html>
+</html>
